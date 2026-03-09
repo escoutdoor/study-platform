@@ -91,7 +91,7 @@ func (a *App) initHttpServer(ctx context.Context) error {
 
 	s := &http.Server{
 		Addr:              config.Config().HttpServer.Address(),
-		Handler:           mux,
+		Handler:           middleware.Logging(mux),
 		ReadTimeout:       time.Second * 5,
 		ReadHeaderTimeout: time.Second * 5,
 	}
