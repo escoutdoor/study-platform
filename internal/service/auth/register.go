@@ -29,7 +29,7 @@ func (s *Service) Register(ctx context.Context, in entity.User) (entity.Tokens, 
 
 		return nil
 	}); txErr != nil {
-		return entity.Tokens{}, err
+		return entity.Tokens{}, txErr
 	}
 
 	accessToken, err := s.tokenProvider.GenerateAccessToken(userID, []token.Role{token.RoleStudent})
