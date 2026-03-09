@@ -1,0 +1,924 @@
+basePath: /
+definitions:
+  auth.authResponse:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+  auth.loginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 20
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  auth.loginResponse:
+    properties:
+      tokens:
+        $ref: '#/definitions/auth.authResponse'
+    type: object
+  auth.refreshTokenRequest:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
+    type: object
+  auth.refreshTokenResponse:
+    properties:
+      tokens:
+        $ref: '#/definitions/auth.authResponse'
+    type: object
+  auth.registerRequest:
+    properties:
+      email:
+        type: string
+      firstName:
+        maxLength: 20
+        minLength: 1
+        type: string
+      lastName:
+        maxLength: 20
+        minLength: 1
+        type: string
+      password:
+        maxLength: 20
+        minLength: 8
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    type: object
+  auth.registerResponse:
+    properties:
+      tokens:
+        $ref: '#/definitions/auth.authResponse'
+    type: object
+  course.courseResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      teacherId:
+        type: integer
+      title:
+        type: string
+    type: object
+  course.createRequest:
+    properties:
+      description:
+        minLength: 3
+        type: string
+      title:
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  course.createResponse:
+    properties:
+      courseId:
+        type: integer
+    type: object
+  course.getResponse:
+    properties:
+      course:
+        $ref: '#/definitions/course.courseResponse'
+    type: object
+  course.listResponse:
+    properties:
+      courses:
+        items:
+          $ref: '#/definitions/course.courseResponse'
+        type: array
+    type: object
+  course.updateRequest:
+    properties:
+      description:
+        minLength: 3
+        type: string
+      title:
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  course.updateResponse:
+    properties:
+      course:
+        $ref: '#/definitions/course.courseResponse'
+    type: object
+  httpresponse.ErrorDetail:
+    properties:
+      field:
+        type: string
+      message:
+        type: string
+    type: object
+  httpresponse.ErrorResponse:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/httpresponse.ErrorDetail'
+        type: array
+      message:
+        example: request validation failed
+        type: string
+    type: object
+  student.getResponse:
+    properties:
+      student:
+        $ref: '#/definitions/student.studentResponse'
+    type: object
+  student.listResponse:
+    properties:
+      students:
+        items:
+          $ref: '#/definitions/student.studentResponse'
+        type: array
+    type: object
+  student.studentResponse:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      userId:
+        type: integer
+    type: object
+  student.updateRequest:
+    type: object
+  teacher.createRequest:
+    properties:
+      department:
+        minLength: 3
+        type: string
+    required:
+    - department
+    type: object
+  teacher.getResponse:
+    properties:
+      teacher:
+        $ref: '#/definitions/teacher.teacherResponse'
+    type: object
+  teacher.listResponse:
+    properties:
+      teachers:
+        items:
+          $ref: '#/definitions/teacher.teacherResponse'
+        type: array
+    type: object
+  teacher.teacherResponse:
+    properties:
+      department:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      userId:
+        type: integer
+    type: object
+  teacher.updateRequest:
+    properties:
+      department:
+        minLength: 2
+        type: string
+    required:
+    - department
+    type: object
+  user.updateRequest:
+    properties:
+      email:
+        type: string
+      firstName:
+        maxLength: 20
+        minLength: 1
+        type: string
+      lastName:
+        maxLength: 20
+        minLength: 1
+        type: string
+      password:
+        maxLength: 20
+        minLength: 8
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    type: object
+  user.updateResponse:
+    properties:
+      user:
+        $ref: '#/definitions/user.userResponse'
+    type: object
+  user.userResponse:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+    type: object
+host: localhost:3800
+info:
+  contact:
+    email: vanap387@gmail.com
+    name: Ivan Popov
+  description: API for managing courses, students, and teachers.
+  termsOfService: http://swagger.io/terms/
+  title: Study Platform API
+  version: 1.0.0
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user with email and password and returns access
+        and refresh tokens.
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.loginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.loginResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Incorrect credentials
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      summary: Login user
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refreshes access and refresh tokens using a refresh token.
+      parameters:
+      - description: Refresh token request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.refreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.refreshTokenResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Invalid or expired refresh token
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      summary: Refresh tokens
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user account and returns access and refresh tokens.
+      parameters:
+      - description: Register request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.registerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/auth.registerResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "409":
+          description: User with this email already exists
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      summary: Register user
+      tags:
+      - auth
+  /courses:
+    get:
+      description: Returns the list of all courses.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/course.listResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      summary: List courses
+      tags:
+      - courses
+    post:
+      consumes:
+      - application/json
+      description: Creates a new course for the authenticated teacher.
+      parameters:
+      - description: Create course request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/course.createRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/course.createResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create course
+      tags:
+      - courses
+  /courses/{id}:
+    delete:
+      description: Deletes a course owned by the authenticated teacher.
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete course
+      tags:
+      - courses
+    get:
+      description: Returns a course by its identifier.
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/course.getResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      summary: Get course
+      tags:
+      - courses
+    put:
+      consumes:
+      - application/json
+      description: Updates a course owned by the authenticated teacher.
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update course request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/course.updateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/course.updateResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update course
+      tags:
+      - courses
+  /students:
+    get:
+      description: Returns the list of all students.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/student.listResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      summary: List students
+      tags:
+      - students
+  /students/{id}:
+    get:
+      description: Returns a student by user identifier.
+      parameters:
+      - description: Student user ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/student.getResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: Student not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      summary: Get student
+      tags:
+      - students
+  /students/me:
+    put:
+      consumes:
+      - application/json
+      description: Updates the authenticated student. The request schema is temporary
+        and may change!!!
+      parameters:
+      - description: Temporary update current student request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/student.updateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: Student not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update current student
+      tags:
+      - students
+  /students/me/courses/{courseId}:
+    delete:
+      description: Removes the authenticated student from a course.
+      parameters:
+      - description: Course ID
+        in: path
+        name: courseId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "409":
+          description: Student is not enrolled in this course
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Unenroll from course
+      tags:
+      - students
+    post:
+      description: Enrolls the authenticated student in a course.
+      parameters:
+      - description: Course ID
+        in: path
+        name: courseId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: Course not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "409":
+          description: Student is already enrolled in this course
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Enroll in course
+      tags:
+      - students
+  /teachers:
+    get:
+      description: Returns the list of all teachers.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/teacher.listResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      summary: List teachers
+      tags:
+      - teachers
+    post:
+      consumes:
+      - application/json
+      description: Creates a teacher profile for the authenticated user.
+      parameters:
+      - description: Create teacher request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/teacher.createRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "409":
+          description: Teacher already exists
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create teacher profile
+      tags:
+      - teachers
+  /teachers/{id}:
+    get:
+      description: Returns a teacher by user identifier.
+      parameters:
+      - description: Teacher user ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/teacher.getResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: Teacher not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      summary: Get teacher
+      tags:
+      - teachers
+  /teachers/me:
+    put:
+      consumes:
+      - application/json
+      description: Updates the authenticated teacher profile.
+      parameters:
+      - description: Update current teacher request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/teacher.updateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: Teacher not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update current teacher
+      tags:
+      - teachers
+  /users/me:
+    delete:
+      description: Deletes the authenticated user account.
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete current user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Updates the authenticated user's profile data and returns the updated
+        user.
+      parameters:
+      - description: Update current user request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.updateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.updateResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "409":
+          description: User with this email already exists
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpresponse.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update current user
+      tags:
+      - users
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer " followed by your JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

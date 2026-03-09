@@ -1,0 +1,16 @@
+services:
+  pg:
+    image: postgres:18.1-alpine3.23
+    container_name: study-platform-pg
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ivan
+      POSTGRES_PASSWORD: aXZhbiBwb3Bvdg==
+      POSTGRES_DB: study-platform
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
