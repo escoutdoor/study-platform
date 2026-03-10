@@ -125,8 +125,10 @@ definitions:
   httpresponse.ErrorDetail:
     properties:
       field:
+        example: email
         type: string
       message:
+        example: This field is required
         type: string
     type: object
   httpresponse.ErrorResponse:
@@ -163,6 +165,11 @@ definitions:
         type: integer
     type: object
   student.updateRequest:
+    type: object
+  student.updateResponse:
+    properties:
+      student:
+        $ref: '#/definitions/student.studentResponse'
     type: object
   teacher.createRequest:
     properties:
@@ -204,6 +211,11 @@ definitions:
         type: string
     required:
     - department
+    type: object
+  teacher.updateResponse:
+    properties:
+      teacher:
+        $ref: '#/definitions/teacher.teacherResponse'
     type: object
   user.updateRequest:
     properties:
@@ -596,9 +608,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Student profile updated successfully
           schema:
-            type: string
+            $ref: '#/definitions/student.updateResponse'
         "400":
           description: Bad request
           schema:
@@ -637,7 +649,7 @@ paths:
       - application/json
       responses:
         "204":
-          description: No Content
+          description: Successfully enrolled
           schema:
             type: string
         "400":
@@ -681,9 +693,11 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Successfully enrolled
           schema:
-            type: string
+            additionalProperties:
+              type: string
+            type: object
         "400":
           description: Bad request
           schema:
@@ -745,9 +759,11 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Teacher profile created successfully
           schema:
-            type: string
+            additionalProperties:
+              type: string
+            type: object
         "400":
           description: Bad request
           schema:
@@ -816,9 +832,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Teacher profile updated successfully
           schema:
-            type: string
+            $ref: '#/definitions/teacher.updateResponse'
         "400":
           description: Bad request
           schema:

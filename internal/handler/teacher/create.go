@@ -18,8 +18,8 @@ import (
 //	@Accept			json
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			request	body		createRequest	true	"Create teacher request"
-//	@Success		201		{string}	string	"Created"
+//	@Param			request	body		createRequest				true	"Create teacher request"
+//	@Success		201		{object}	map[string]string			"Teacher profile created successfully"
 //	@Failure		400		{object}	httpresponse.ErrorResponse	"Bad request"
 //	@Failure		401		{object}	httpresponse.ErrorResponse	"Unauthorized"
 //	@Failure		409		{object}	httpresponse.ErrorResponse	"Teacher already exists"
@@ -46,7 +46,7 @@ func (h *handler) create(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	httpresponse.Created(w, nil)
+	httpresponse.Created(w, map[string]string{"message": "teacher profile created successfully"})
 	return nil
 }
 

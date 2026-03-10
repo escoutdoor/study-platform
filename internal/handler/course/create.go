@@ -19,11 +19,11 @@ import (
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			request	body		createRequest	true	"Create course request"
-//	@Success		201	{object}	createResponse
-//	@Failure		400	{object}	httpresponse.ErrorResponse	"Bad request"
-//	@Failure		401	{object}	httpresponse.ErrorResponse	"Unauthorized"
-//	@Failure		403	{object}	httpresponse.ErrorResponse	"Forbidden"
-//	@Failure		500	{object}	httpresponse.ErrorResponse	"Internal server error"
+//	@Success		201		{object}	createResponse
+//	@Failure		400		{object}	httpresponse.ErrorResponse	"Bad request"
+//	@Failure		401		{object}	httpresponse.ErrorResponse	"Unauthorized"
+//	@Failure		403		{object}	httpresponse.ErrorResponse	"Forbidden"
+//	@Failure		500		{object}	httpresponse.ErrorResponse	"Internal server error"
 //	@Router			/courses [post]
 func (h *handler) create(w http.ResponseWriter, r *http.Request) error {
 	req := new(createRequest)

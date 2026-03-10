@@ -48,7 +48,7 @@ type teacherService interface {
 	Get(ctx context.Context, userID int) (entity.Teacher, error)
 
 	Create(ctx context.Context, in entity.Teacher) error
-	Update(ctx context.Context, in entity.Teacher) error
+	Update(ctx context.Context, in entity.Teacher) (entity.Teacher, error)
 }
 
 type teacherResponse struct {

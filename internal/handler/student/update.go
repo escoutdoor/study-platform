@@ -18,8 +18,8 @@ import (
 //	@Accept			json
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			request	body		updateRequest	true	"Temporary update current student request"
-//	@Success		200		{string}	string	"OK"
+//	@Param			request	body		updateRequest				true	"Temporary update current student request"
+//	@Success		200		{object}	updateResponse				"Student profile updated successfully"
 //	@Failure		400		{object}	httpresponse.ErrorResponse	"Bad request"
 //	@Failure		401		{object}	httpresponse.ErrorResponse	"Unauthorized"
 //	@Failure		403		{object}	httpresponse.ErrorResponse	"Forbidden"
@@ -43,11 +43,13 @@ func (h *handler) update(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	in := updateRequestToStudent(req, userID)
-	if err := h.studentService.Update(ctx, in); err != nil {
+	student, err := h.studentService.Update(ctx, in)
+	if err != nil {
 		return err
 	}
 
-	httpresponse.OK(w, nil)
+	resp := updateResponse{Student: studentToResponse(student)}
+	httpresponse.OK(w, resp)
 	return nil
 }
 
@@ -59,4 +61,8 @@ func updateRequestToStudent(req *updateRequest, userID int) entity.Student {
 	return entity.Student{
 		UserID: userID,
 	}
+}
+
+type updateResponse struct {
+	Student studentResponse `json:"student"`
 }

@@ -1,8 +1,9 @@
 package student
 
 import (
-	"github.com/escoutdoor/study-platform/pkg/httpresponse"
 	"net/http"
+
+	"github.com/escoutdoor/study-platform/pkg/httpresponse"
 )
 
 // get godoc

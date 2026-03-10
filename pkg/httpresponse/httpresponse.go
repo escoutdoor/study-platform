@@ -19,15 +19,17 @@ type ErrorDetail struct {
 }
 
 func JSON(w http.ResponseWriter, status int, v any) {
+	if v == nil {
+		w.WriteHeader(status)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 
-	if v != nil {
-		if err := json.NewEncoder(w).Encode(v); err != nil {
-			logger.DebugKV(context.Background(), "encode json response", "error", err)
-		}
+	if err := json.NewEncoder(w).Encode(v); err != nil {
+		logger.DebugKV(context.Background(), "encode json response", "error", err)
 	}
-
 }
 
 func Created(w http.ResponseWriter, v any) {

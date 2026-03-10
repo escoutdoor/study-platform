@@ -14,14 +14,14 @@ import (
 //	@Tags			students
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			courseId	path		int	true	"Course ID"
-//	@Success		201		{string}	string	"Created"
-//	@Failure		400		{object}	httpresponse.ErrorResponse	"Bad request"
-//	@Failure		401		{object}	httpresponse.ErrorResponse	"Unauthorized"
-//	@Failure		403		{object}	httpresponse.ErrorResponse	"Forbidden"
-//	@Failure		404		{object}	httpresponse.ErrorResponse	"Course not found"
-//	@Failure		409		{object}	httpresponse.ErrorResponse	"Student is already enrolled in this course"
-//	@Failure		500		{object}	httpresponse.ErrorResponse	"Internal server error"
+//	@Param			courseId	path		int							true	"Course ID"
+//	@Success		201			{object}	map[string]string			"Successfully enrolled"
+//	@Failure		400			{object}	httpresponse.ErrorResponse	"Bad request"
+//	@Failure		401			{object}	httpresponse.ErrorResponse	"Unauthorized"
+//	@Failure		403			{object}	httpresponse.ErrorResponse	"Forbidden"
+//	@Failure		404			{object}	httpresponse.ErrorResponse	"Course not found"
+//	@Failure		409			{object}	httpresponse.ErrorResponse	"Student is already enrolled in this course"
+//	@Failure		500			{object}	httpresponse.ErrorResponse	"Internal server error"
 //	@Router			/students/me/courses/{courseId} [post]
 func (h *handler) enroll(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
@@ -39,6 +39,6 @@ func (h *handler) enroll(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	httpresponse.Created(w, nil)
+	httpresponse.Created(w, map[string]string{"message": "successfully enrolled"})
 	return nil
 }

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+
 	"github.com/escoutdoor/study-platform/internal/entity"
 	"github.com/escoutdoor/study-platform/internal/util/hasher"
 	"github.com/escoutdoor/study-platform/internal/util/token"

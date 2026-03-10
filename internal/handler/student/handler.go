@@ -56,7 +56,7 @@ type studentService interface {
 	List(ctx context.Context) ([]entity.Student, error)
 	Get(ctx context.Context, userID int) (entity.Student, error)
 
-	Update(ctx context.Context, in entity.Student) error
+	Update(ctx context.Context, in entity.Student) (entity.Student, error)
 }
 
 type enrollmentService interface {

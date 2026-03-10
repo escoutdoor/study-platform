@@ -502,9 +502,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Student profile updated successfully",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/student.updateResponse"
                         }
                     },
                     "400": {
@@ -566,9 +566,12 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "Successfully enrolled",
                         "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
                     "400": {
@@ -634,7 +637,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content",
+                        "description": "Successfully enrolled",
                         "schema": {
                             "type": "string"
                         }
@@ -780,9 +783,12 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "Teacher profile created successfully",
                         "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
                     "400": {
@@ -843,9 +849,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Teacher profile updated successfully",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/teacher.updateResponse"
                         }
                     },
                     "400": {
@@ -1224,10 +1230,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "field": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "email"
                 },
                 "message": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "This field is required"
                 }
             }
         },
@@ -1284,6 +1292,14 @@ const docTemplate = `{
         },
         "student.updateRequest": {
             "type": "object"
+        },
+        "student.updateResponse": {
+            "type": "object",
+            "properties": {
+                "student": {
+                    "$ref": "#/definitions/student.studentResponse"
+                }
+            }
         },
         "teacher.createRequest": {
             "type": "object",
@@ -1345,6 +1361,14 @@ const docTemplate = `{
                 "department": {
                     "type": "string",
                     "minLength": 2
+                }
+            }
+        },
+        "teacher.updateResponse": {
+            "type": "object",
+            "properties": {
+                "teacher": {
+                    "$ref": "#/definitions/teacher.teacherResponse"
                 }
             }
         },

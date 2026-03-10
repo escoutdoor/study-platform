@@ -2,6 +2,7 @@ package teacher
 
 import (
 	"context"
+
 	"github.com/escoutdoor/study-platform/internal/entity"
 	"github.com/escoutdoor/study-platform/pkg/errwrap"
 )

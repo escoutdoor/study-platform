@@ -14,8 +14,8 @@ import (
 //	@Tags			courses
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			id	path		int	true	"Course ID"
-//	@Success		204	{string}	string	"No Content"
+//	@Param			id	path		int							true	"Course ID"
+//	@Success		204	{string}	string						"No Content"
 //	@Failure		400	{object}	httpresponse.ErrorResponse	"Bad request"
 //	@Failure		401	{object}	httpresponse.ErrorResponse	"Unauthorized"
 //	@Failure		403	{object}	httpresponse.ErrorResponse	"Forbidden"
