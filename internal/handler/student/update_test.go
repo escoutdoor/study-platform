@@ -77,16 +77,16 @@ func TestUpdate(t *testing.T) {
 		},
 		{
 			name:   "student not found",
-			userID: 999,
+			userID: 404,
 			body:   updateRequest{},
 			mockFn: func(m *mockStudentService) {
-				in := entity.Student{UserID: 999}
+				in := entity.Student{UserID: 404}
 				m.On("Update", mock.Anything, in).
-					Return(entity.Student{}, apperror.StudentNotFoundID(999)).Once()
+					Return(entity.Student{}, apperror.StudentNotFoundID(404)).Once()
 			},
 			wantCode: http.StatusNotFound,
 			wantBody: httpresponse.ErrorResponse{
-				Message: "student with id 999 was not found",
+				Message: "student with id 404 was not found",
 			},
 		},
 		{

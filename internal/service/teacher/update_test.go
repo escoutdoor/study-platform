@@ -1,0 +1,133 @@
+package teacher
+
+import (
+	"context"
+	"errors"
+	"testing"
+
+	"github.com/escoutdoor/study-platform/internal/apperror"
+	"github.com/escoutdoor/study-platform/internal/entity"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+)
+
+func TestUpdate(t *testing.T) {
+	tests := []struct {
+		name string
+
+		input  entity.Teacher
+		mockFn func(m *mockTeacherRepository)
+
+		wantTeacher entity.Teacher
+		wantErr     error
+	}{
+		{
+			name: "success",
+			input: entity.Teacher{
+				UserID:     1,
+				Department: "Cooking",
+			},
+			mockFn: func(m *mockTeacherRepository) {
+				m.On("GetByUserID", mock.Anything, 1).Return(entity.Teacher{
+					UserID:     1,
+					Department: "IT",
+				}, nil).Once()
+
+				m.On("Update", mock.Anything, entity.Teacher{
+					UserID:     1,
+					Department: "Cooking",
+				}).Return(nil).Once()
+
+				m.On("GetByUserID", mock.Anything, 1).Return(entity.Teacher{
+					UserID:     1,
+					FirstName:  "Ivan",
+					LastName:   "Popov",
+					Department: "Cooking",
+					Email:      "ivan@example.com",
+				}, nil).Once()
+			},
+			wantTeacher: entity.Teacher{
+				UserID:     1,
+				FirstName:  "Ivan",
+				LastName:   "Popov",
+				Department: "Cooking",
+				Email:      "ivan@example.com",
+			},
+			wantErr: nil,
+		},
+		{
+			name: "teacher not found - first get",
+			input: entity.Teacher{
+				UserID:     404,
+				Department: "Cooking",
+			},
+			mockFn: func(m *mockTeacherRepository) {
+				m.On("GetByUserID", mock.Anything, 404).
+					Return(entity.Teacher{}, apperror.TeacherNotFoundID(404)).Once()
+			},
+			wantTeacher: entity.Teacher{},
+			wantErr:     apperror.TeacherNotFoundID(404),
+		},
+		{
+			name: "update - repo error",
+			input: entity.Teacher{
+				UserID:     1,
+				Department: "Cooking",
+			},
+			mockFn: func(m *mockTeacherRepository) {
+				m.On("GetByUserID", mock.Anything, 1).Return(entity.Teacher{
+					UserID:     1,
+					Department: "IT",
+				}, nil).Once()
+
+				m.On("Update", mock.Anything, mock.Anything).
+					Return(errors.New("database error")).Once()
+			},
+			wantTeacher: entity.Teacher{},
+			wantErr:     errors.New("database error"),
+		},
+		{
+			name: "get after update - repo error",
+			input: entity.Teacher{
+				UserID:     1,
+				Department: "Cooking",
+			},
+			mockFn: func(m *mockTeacherRepository) {
+				m.On("GetByUserID", mock.Anything, 1).Return(entity.Teacher{
+					UserID:     1,
+					Department: "IT",
+				}, nil).Once()
+
+				m.On("Update", mock.Anything, entity.Teacher{
+					UserID:     1,
+					Department: "Cooking",
+				}).Return(nil).Once()
+
+				m.On("GetByUserID", mock.Anything, 1).
+					Return(entity.Teacher{}, errors.New("database error")).Once()
+			},
+			wantTeacher: entity.Teacher{},
+			wantErr:     errors.New("database error"),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := new(mockTeacherRepository)
+			s := New(repo)
+
+			tt.mockFn(repo)
+
+			teacher, err := s.Update(context.Background(), tt.input)
+
+			if tt.wantErr != nil {
+				assert.ErrorContains(t, err, tt.wantErr.Error())
+			} else {
+				assert.NoError(t, err)
+			}
+
+			assert.Equal(t, tt.wantTeacher, teacher)
+			repo.AssertExpectations(t)
+		})
+	}
+}
