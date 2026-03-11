@@ -9,8 +9,8 @@ REST API for managing courses, students, and teachers built with Go.
 
 ## Tech Stack
 
-- **Go** — standard `net/http` (no frameworks)
-- **PostgreSQL** — raw SQL queries via `database/sql` + `lib/pq` (no ORM)
+- **Go** — standard `net/http`
+- **PostgreSQL** — raw SQL queries via `database/sql` + `lib/pq`
 - **JWT** — access/refresh token authentication with role-based authorization
 - **Swagger** — auto-generated API documentation
 - **Goose** — database migrations (auto-applied on startup)
