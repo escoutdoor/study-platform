@@ -1063,7 +1063,7 @@
                 },
                 "password": {
                     "type": "string",
-                    "maxLength": 20,
+                    "maxLength": 40,
                     "minLength": 8
                 }
             }
@@ -1119,7 +1119,7 @@
                 },
                 "password": {
                     "type": "string",
-                    "maxLength": 20,
+                    "maxLength": 40,
                     "minLength": 8
                 }
             }
@@ -1303,7 +1303,7 @@
             "properties": {
                 "department": {
                     "type": "string",
-                    "minLength": 3
+                    "minLength": 2
                 }
             }
         },
@@ -1390,7 +1390,7 @@
                 },
                 "password": {
                     "type": "string",
-                    "maxLength": 20,
+                    "maxLength": 40,
                     "minLength": 8
                 }
             }

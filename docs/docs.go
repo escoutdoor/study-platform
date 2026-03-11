@@ -1069,7 +1069,7 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string",
-                    "maxLength": 20,
+                    "maxLength": 40,
                     "minLength": 8
                 }
             }
@@ -1125,7 +1125,7 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string",
-                    "maxLength": 20,
+                    "maxLength": 40,
                     "minLength": 8
                 }
             }
@@ -1309,7 +1309,7 @@ const docTemplate = `{
             "properties": {
                 "department": {
                     "type": "string",
-                    "minLength": 3
+                    "minLength": 2
                 }
             }
         },
@@ -1396,7 +1396,7 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string",
-                    "maxLength": 20,
+                    "maxLength": 40,
                     "minLength": 8
                 }
             }
