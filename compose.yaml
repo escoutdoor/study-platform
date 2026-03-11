@@ -1,4 +1,17 @@
 services:
+  study-platform:
+    container_name: study-platform
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3800:3800
+    env_file:
+      - .env
+    depends_on:
+      - pg
+
   pg:
     image: postgres:18.1-alpine3.23
     container_name: study-platform-pg
@@ -7,7 +20,7 @@ services:
       - 5432:5432
     environment:
       POSTGRES_USER: ivan
-      POSTGRES_PASSWORD: aXZhbiBwb3Bvdg==
+      POSTGRES_PASSWORD: popov
       POSTGRES_DB: study-platform
     volumes:
       - pg_data:/var/lib/postgresql/data

@@ -28,7 +28,7 @@ import (
 // @description				Type "Bearer " followed by your JWT token.
 func main() {
 	ctx := context.Background()
-	if err := config.Load("env.dev"); err != nil {
+	if err := config.Load(); err != nil {
 		logger.Fatal(ctx, "load config:", err)
 	}
 
