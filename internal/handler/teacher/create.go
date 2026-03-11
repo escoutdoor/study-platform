@@ -51,7 +51,7 @@ func (h *handler) create(w http.ResponseWriter, r *http.Request) error {
 }
 
 type createRequest struct {
-	Department string `json:"department" validate:"required,min=3"`
+	Department string `json:"department" validate:"required,min=2"`
 }
 
 func createRequestToTeacher(req *createRequest, userID int) entity.Teacher {
