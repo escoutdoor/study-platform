@@ -47,7 +47,7 @@ func (h *handler) login(w http.ResponseWriter, r *http.Request) error {
 
 type loginRequest struct {
 	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=8,max=20"`
+	Password string `json:"password" validate:"required,min=8,max=40"`
 }
 
 func loginRequestToUser(req *loginRequest) entity.User {
