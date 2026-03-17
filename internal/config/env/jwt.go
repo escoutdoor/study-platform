@@ -11,7 +11,7 @@ type jwtTokenConfig struct {
 	JwtRefreshTokenSecretKey string `env:"JWT_REFRESH_TOKEN_SECRET_KEY,required"`
 
 	JwtAccessTokenTTL  time.Duration `env:"JWT_ACCESS_TOKEN_TTL,required"`
-	JwtRefreshTokenTTL time.Duration `env:"JWT_ACCESS_TOKEN_TTL,required"`
+	JwtRefreshTokenTTL time.Duration `env:"JWT_REFRESH_TOKEN_TTL,required"`
 }
 
 func NewJwtTokenConfig() (*jwtTokenConfig, error) {
